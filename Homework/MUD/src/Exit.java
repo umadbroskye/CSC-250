@@ -26,11 +26,14 @@ public class Exit {
     private final String directionLeadingToDest1;
     private final String directionLeadingToDest2;
 
-    public Exit(Room destination1, String directionLeadingToDest1, Room destination2, String directionLeadingToDest2) {
-        this.destination1 = destination1;
-        this.destination2 = destination2;
-        this.directionLeadingToDest1 = directionLeadingToDest1;
-        this.directionLeadingToDest2 = directionLeadingToDest2;
+    public Exit(Room room1, String s1, Room room2, String s2) {
+        this.destination1 = room1;
+        this.destination2 = room2;
+        this.directionLeadingToDest1 = s1;
+        this.directionLeadingToDest2 = s2;
+
+        room1.addExit(this);
+        room2.addExit(this);
     }
 
     public String getDirectionStringLeadingAwayFromRoom(Room r) {

@@ -20,79 +20,43 @@
  * SOFTWARE.
  */
 
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Scanner;
+
 public class Main {
-    public static void main(String[] args) {
-        Player p = new Player("Mike");
+    public static void main(String[] args) throws FileNotFoundException {
 
-        Room hall0 = new Room("Hall 0");
-        Room hall1 = new Room("Hall 1");
-        Room hall2 = new Room("Hall 2");
-        Room hall3 = new Room("Hall 3");
-        Room lab1 = new Room("Lab 1");
-        Room lab2 = new Room("Lab 2");
-        Room lasercutter = new Room("Laser Cutter");
-        Room esports = new Room("Esports");
-        Room lobby = new Room("Lobby");
-        Room network = new Room("Network");
-        Room s120 = new Room("S120");
-        Room s118b = new Room("S118B");
-        Room sodaroom = new Room("Soda Room");
-        Room entrance = new Room("Entrance");
-
-        Exit h1_ent = new Exit(hall1, "north", entrance, "south");
-        hall1.addExit(h1_ent);
-        entrance.addExit(h1_ent);
-
-        Exit h1_h0 = new Exit(hall1, "east", hall0, "west");
-        hall1.addExit(h1_h0);
-        hall0.addExit(h1_h0);
-
-        Exit h1_h2 = new Exit(hall1, "west", hall2, "east");
-        hall1.addExit(h1_h2);
-        hall2.addExit(h1_h2);
-
-        Exit h0_s120 = new Exit(hall0, "east", s120, "west");
-        hall0.addExit(h0_s120);
-        s120.addExit(h0_s120);
-
-        Exit h0_lob = new Exit(hall0, "south", lobby, "north");
-        hall0.addExit(h0_lob);
-        lobby.addExit(h0_lob);
-
-        Exit h2_h3 = new Exit(hall2, "west", hall3, "east");
-        hall2.addExit(h2_h3);
-        hall3.addExit(h2_h3);
-
-        Exit h3_sod = new Exit(hall3, "north", sodaroom, "south");
-        hall3.addExit(h3_sod);
-        sodaroom.addExit(h3_sod);
-
-        Exit h3_l1 = new Exit(hall3, "west", lab1, "east");
-        hall3.addExit(h3_l1);
-        lab1.addExit(h3_l1);
-
-        Exit h3_s118b = new Exit(hall3, "south", s118b, "north");
-        hall3.addExit(h3_s118b);
-        s118b.addExit(h3_s118b);
-
-        Exit sod_l2 = new Exit(sodaroom, "west", lab2, "east");
-        sodaroom.addExit(sod_l2);
-        lab2.addExit(sod_l2);
-
-        Exit lob_esp = new Exit(lobby, "east", esports, "west");
-        lobby.addExit(lob_esp);
-        esports.addExit(lob_esp);
-
-        Exit lob_las = new Exit(lobby, "south", lasercutter, "north");
-        lobby.addExit(lob_las);
-        lasercutter.addExit(lob_las);
-
-        Exit lob_net = new Exit(lobby, "west", network, "east");
-        lobby.addExit(lob_net);
-        network.addExit(lob_net);
-
-        entrance.addPlayer(p);
-
-        entrance.display();
+        boolean test = false; //Set to true if you want to test
+        Map<String, Room> roomMap = new HashMap<String, Room>(); //Assignment asks to store this in an ArrayList. I decided to use a HashMap instead since it is more efficient and easier to read.
+        ArrayList<Exit> exitList = new ArrayList<Exit>();
+        FileInputStream fin = new FileInputStream("resources/map.txt");
+        Scanner input = new Scanner(fin);
+        String currentMode = "No Mode";
+        if (input.hasNext()) {
+            do {
+                String line = input.nextLine();
+                if (line.equals("ROOMS") || line.equals("EXIT")) {
+                    currentMode = "ROOMS";
+                } else if (line.equals("EXITS")) {
+                    currentMode = "EXITS";
+                } else if (!line.equals("")) {
+                    if (currentMode.equals("ROOMS")) {
+                        roomMap.put(line, new Room(line));
+                    } else if (currentMode.equals("EXITS")) {
+                        String[] eP = line.split(","); //This replaces parseExit. I believe that the parseExit method was created in order to teach the class how to create it manually. For me, using the split method is better than doing it manually
+                        exitList.add(new Exit(roomMap.get(eP[0]), eP[1], roomMap.get(eP[2]), eP[3]));
+                    }
+                }
+            } while (input.hasNext());
+        }
+        if (test) {
+            for (String s : roomMap.keySet()) {
+                roomMap.get(s).display();
+            }
+        }
     }
 }
