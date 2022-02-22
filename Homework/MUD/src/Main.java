@@ -33,6 +33,20 @@ public class Main {
         boolean test = false; //Set to true if you want to test
         Map<String, Room> roomMap = new HashMap<String, Room>(); //Assignment asks to store this in an ArrayList. I decided to use a HashMap instead since it is more efficient and easier to read.
         ArrayList<Exit> exitList = new ArrayList<Exit>();
+        buildRoom(roomMap, exitList);
+        Room theEntrance = roomMap.get("entrance");
+        Player thePlayer = new Player("Mike");
+        theEntrance.addPlayer(thePlayer);
+        thePlayer.lookAround();
+        if (test) {
+            for (Room room : roomMap.values()) {
+                room.display();
+            }
+        }
+        thePlayer.play();
+    }
+
+    private static void buildRoom(Map<String, Room> roomMap, ArrayList<Exit> exitList) throws FileNotFoundException {
         FileInputStream fin = new FileInputStream("resources/map.txt");
         Scanner input = new Scanner(fin);
         String currentMode = "No Mode";
@@ -52,11 +66,6 @@ public class Main {
                     }
                 }
             } while (input.hasNext());
-        }
-        if (test) {
-            for (String s : roomMap.keySet()) {
-                roomMap.get(s).display();
-            }
         }
     }
 }

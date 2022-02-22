@@ -20,9 +20,12 @@
  * SOFTWARE.
  */
 
+import java.util.Scanner;
+
 public class Player {
 
     private final String name;
+    private Room currentRoom;
 
     public Player(String s) {
         this.name = s;
@@ -32,4 +35,41 @@ public class Player {
     public String getName() {
         return this.name;
     }
+
+
+    public void play() {
+        Scanner input = new Scanner(System.in);
+        String line;
+        while (true) {
+            System.out.print("What would you like to do? \n> ");
+            line = input.nextLine();
+            if (line.equals("look")) {
+                this.lookAround();
+            } else if (line.equals("exit")) {
+                System.out.println("Goodbye!!!");
+                return;
+            } else {
+                if (currentRoom.hasExit(line)) {
+                    currentRoom.takeExit(line);
+
+                } else {
+                    System.out.println("Exit Not Found!!!");
+                    this.lookAround();
+                }
+            }
+        }
+    }
+
+    public Room getRoom() {
+        return this.currentRoom;
+    }
+
+    public void setRoom(Room r) {
+        this.currentRoom = r;
+    }
+
+    public void lookAround() {
+        this.currentRoom.display();
+    }
+
 }

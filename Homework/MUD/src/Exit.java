@@ -39,4 +39,14 @@ public class Exit {
     public String getDirectionStringLeadingAwayFromRoom(Room r) {
         return this.destination1 == r ? this.directionLeadingToDest2 : this.directionLeadingToDest1;
     }
+
+    public Room getRoomInADirection(String direction) {
+        if (this.directionLeadingToDest2.equals(direction)) {
+            return this.destination2;
+        } else if (this.directionLeadingToDest1.equals(direction)) {
+            return this.destination1;
+        } else {
+            throw new RuntimeException("Room in that direction not found!!!!");
+        }
+    }
 }

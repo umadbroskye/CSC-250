@@ -43,23 +43,46 @@ public class Room {
         }
         System.out.print("Obvious Exits: ");
         StringBuilder exitDirections = new StringBuilder();
-        for (Exit exit : theExits) {
+        for (Exit exit : this.theExits) {
             exitDirections.append(exit.getDirectionStringLeadingAwayFromRoom(this)).append(" ");
         }
         System.out.println(exitDirections);
     }
 
     public Player getPlayer() {
-        return currentPlayer;
+        return this.currentPlayer;
     }
 
     public void addPlayer(Player p) {
-        currentPlayer = p;
+        this.currentPlayer = p;
+        p.setRoom(this);
+    }
+
+    public void removePlayer(Player p) {
+        this.currentPlayer = null;
     }
 
     public void addExit(Exit e) {
-        theExits.add(e);
+        this.theExits.add(e);
     }
 
+    public boolean hasExit(String direction) {
+        for (Exit exit : this.theExits) {
+            if (exit.getDirectionStringLeadingAwayFromRoom(this).equals(direction))
+                return true;
+        }
+        return false;
+    }
+
+    public void takeExit(String direction) {
+        for (Exit exit : this.theExits) {
+            if (exit.getDirectionStringLeadingAwayFromRoom(this).equals(direction)) {
+                Room r = exit.getRoomInADirection((direction));
+                this.currentPlayer.setRoom(r);
+                r.addPlayer(this.currentPlayer);
+                this.removePlayer(this.currentPlayer);
+            }
+        }
+    }
 
 }
