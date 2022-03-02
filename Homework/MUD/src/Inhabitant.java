@@ -34,9 +34,11 @@ public class Inhabitant {
     public String getName() {
         return this.name;
     }
+
     public Room getRoom() {
         return this.currentRoom;
     }
+
     public void setRoom(Room r) {
         this.currentRoom = r;
     }

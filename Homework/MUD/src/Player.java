@@ -20,7 +20,6 @@
  * SOFTWARE.
  */
 
-import java.util.ArrayList;
 import java.util.Scanner;
 
 public class Player extends Inhabitant {
@@ -36,33 +35,31 @@ public class Player extends Inhabitant {
         while (true) {
             System.out.print("What would you like to do? \n> ");
             line = input.nextLine();
-            if (line.equals("look")) {
-                this.lookAround();
-            } else if (line.equals("throw")) {
-                System.out.print("Who do you want to throw? ");
-                String who = input.nextLine();
-                System.out.print("Where do you want to throw " + who + "? ");
-                String where = input.nextLine();
-                System.out.println("About to throw...." + who + " through the exit to the: " + where + "!!!");
-                ArrayList<Monster> theMonsters = currentRoom.getMonsterList();
-                Monster theMonster = null;
-                for (Monster m: theMonsters) {
-                    if (m.getName().equals(who)){
-                        theMonster = m;
-                    }
-                }
-                currentRoom.throwExit(where, theMonster);
-            } else if (line.equals("exit")) {
-                System.out.println("Goodbye!!!");
-                return;
-            } else {
-                if (currentRoom.hasExit(line)) {
-                    currentRoom.takeExit(line);
-
-                } else {
-                    System.out.println("Exit Not Found!!!");
+            switch (line) {
+                case "look":
                     this.lookAround();
-                }
+                    break;
+                case "throw":
+                    System.out.print("Who do you want to throw? ");
+                    String who = input.nextLine();
+                    System.out.print("Where do you want to throw " + who + "? ");
+                    String where = input.nextLine();
+                    System.out.println("About to throw...." + who + " through the exit to the: " + where + "!!!");
+                    currentRoom.throwMonster(who, where);
+                    this.lookAround();
+                    break;
+                case "exit":
+                    System.out.println("Goodbye!!!");
+                    return;
+                default:
+                    if (currentRoom.hasExit(line)) {
+                        currentRoom.takeExit(line);
+
+                    } else {
+                        System.out.println("Exit Not Found!!!");
+                        this.lookAround();
+                    }
+                    break;
             }
         }
     }

@@ -25,8 +25,8 @@ import java.util.ArrayList;
 public class Room {
     private final ArrayList<Exit> theExits;
     private final String name;
+    private final ArrayList<Monster> theMonsters;
     private Player currentPlayer;
-    private ArrayList<Monster> theMonsters;
 
     public Room(String name) {
         this.name = name;
@@ -87,33 +87,47 @@ public class Room {
         this.theExits.add(e);
     }
 
-    public boolean hasExit(String direction) {
+
+    public Room exitFromString(String s) {
+        Room r = null;
         for (Exit exit : this.theExits) {
-            if (exit.getDirectionStringLeadingAwayFromRoom(this).equals(direction))
-                return true;
+            if (exit.getDirectionStringLeadingAwayFromRoom(this).equals(s)) {
+                r = exit.getRoomInADirection(s);
+            }
         }
-        return false;
+        return r;
+    }
+
+
+    public boolean hasExit(String direction) {
+        return exitFromString(direction) != null;
     }
 
     public void takeExit(String direction) {
-        for (Exit exit : this.theExits) {
-            if (exit.getDirectionStringLeadingAwayFromRoom(this).equals(direction)) {
-                Room r = exit.getRoomInADirection((direction));
-                this.currentPlayer.setRoom(r);
-                r.addPlayer(this.currentPlayer);
-                this.removePlayer(this.currentPlayer);
-            }
+        if (hasExit(direction)) {
+            Room r = exitFromString(direction);
+            this.currentPlayer.setRoom(r);
+            r.addPlayer(this.currentPlayer);
+            this.removePlayer(this.currentPlayer);
         }
     }
 
 
     public void throwExit(String direction, Monster theMonster) {
-        for (Exit exit : this.theExits) {
-            if (exit.getDirectionStringLeadingAwayFromRoom(this).equals(direction)) {
-                Room r = exit.getRoomInADirection((direction));
-                r.addMonster(theMonster);
-                this.removeMonster(theMonster);
+        if (hasExit(direction)) {
+            Room r = exitFromString(direction);
+            r.addMonster(theMonster);
+            this.removeMonster(theMonster);
+        }
+    }
+
+    public void throwMonster(String who, String where) {
+        Monster theMonster = null;
+        for (Monster m : theMonsters) {
+            if (m.getName().equals(who)) {
+                theMonster = m;
             }
         }
+        this.throwExit(where, theMonster);
     }
 }
