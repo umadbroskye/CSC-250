@@ -26,21 +26,28 @@ public class Room {
     private final ArrayList<Exit> theExits;
     private final String name;
     private Player currentPlayer;
+    private ArrayList<Monster> theMonsters;
 
     public Room(String name) {
         this.name = name;
         this.theExits = new ArrayList<Exit>();
+        this.theMonsters = new ArrayList<Monster>();
         this.currentPlayer = null;
     }
 
     public void display() {
         System.out.println("Room: " + this.name);
         System.out.print("Also here: ");
+        StringBuilder alsoHereOutput = new StringBuilder();
         if (this.currentPlayer != null) {
-            System.out.println(this.currentPlayer.getName());
-        } else {
-            System.out.println();
+            alsoHereOutput = new StringBuilder(this.currentPlayer.getName());
         }
+
+        for (Monster monster : theMonsters) {
+            alsoHereOutput.append(", ").append(monster.getName());
+        }
+
+        System.out.println(alsoHereOutput);
         System.out.print("Obvious Exits: ");
         StringBuilder exitDirections = new StringBuilder();
         for (Exit exit : this.theExits) {
@@ -53,13 +60,27 @@ public class Room {
         return this.currentPlayer;
     }
 
+    public ArrayList<Monster> getMonsterList() {
+        return theMonsters;
+    }
+
+
     public void addPlayer(Player p) {
         this.currentPlayer = p;
         p.setRoom(this);
     }
 
+    public void addMonster(Monster m) {
+        this.theMonsters.add(m);
+        m.setRoom(this);
+    }
+
     public void removePlayer(Player p) {
         this.currentPlayer = null;
+    }
+
+    public void removeMonster(Monster m) {
+        this.theMonsters.remove(m);
     }
 
     public void addExit(Exit e) {
@@ -85,4 +106,14 @@ public class Room {
         }
     }
 
+
+    public void throwExit(String direction, Monster theMonster) {
+        for (Exit exit : this.theExits) {
+            if (exit.getDirectionStringLeadingAwayFromRoom(this).equals(direction)) {
+                Room r = exit.getRoomInADirection((direction));
+                r.addMonster(theMonster);
+                this.removeMonster(theMonster);
+            }
+        }
+    }
 }

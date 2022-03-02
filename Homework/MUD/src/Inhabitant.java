@@ -20,8 +20,25 @@
  * SOFTWARE.
  */
 
-public class Monster extends Inhabitant {
-    public Monster(String name) {
-        super(name);
+public class Inhabitant {
+    protected double health;
+    protected String name;
+    protected Room currentRoom;
+
+    public Inhabitant(String name) {
+        this.name = name;
+        this.currentRoom = null;
     }
+
+
+    public String getName() {
+        return this.name;
+    }
+    public Room getRoom() {
+        return this.currentRoom;
+    }
+    public void setRoom(Room r) {
+        this.currentRoom = r;
+    }
+
 }

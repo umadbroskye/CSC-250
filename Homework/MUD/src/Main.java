@@ -28,6 +28,7 @@ import java.util.Map;
 import java.util.Scanner;
 
 public class Main {
+
     public static void main(String[] args) throws FileNotFoundException {
 
         boolean test = false; //Set to true if you want to test
@@ -36,7 +37,9 @@ public class Main {
         buildRoom(roomMap, exitList);
         Room theEntrance = roomMap.get("entrance");
         Player thePlayer = new Player("Mike");
+        Monster theRat = new Monster("rat");
         theEntrance.addPlayer(thePlayer);
+        theEntrance.addMonster(theRat);
         thePlayer.lookAround();
         if (test) {
             for (Room room : roomMap.values()) {
@@ -68,4 +71,4 @@ public class Main {
             } while (input.hasNext());
         }
     }
-}
+    }

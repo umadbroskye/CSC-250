@@ -20,24 +20,17 @@
  * SOFTWARE.
  */
 
+import java.util.ArrayList;
 import java.util.Scanner;
 
-public class Player {
+public class Player extends Inhabitant {
 
-    private final String name;
-    private Room currentRoom;
-
-    public Player(String s) {
-        this.name = s;
-        Room currentRoom = null;
+    public Player(String name) {
+        super(name);
     }
-
-    public String getName() {
-        return this.name;
-    }
-
 
     public void play() {
+        this.lookAround();
         Scanner input = new Scanner(System.in);
         String line;
         while (true) {
@@ -45,6 +38,20 @@ public class Player {
             line = input.nextLine();
             if (line.equals("look")) {
                 this.lookAround();
+            } else if (line.equals("throw")) {
+                System.out.print("Who do you want to throw? ");
+                String who = input.nextLine();
+                System.out.print("Where do you want to throw " + who + "? ");
+                String where = input.nextLine();
+                System.out.println("About to throw...." + who + " through the exit to the: " + where + "!!!");
+                ArrayList<Monster> theMonsters = currentRoom.getMonsterList();
+                Monster theMonster = null;
+                for (Monster m: theMonsters) {
+                    if (m.getName().equals(who)){
+                        theMonster = m;
+                    }
+                }
+                currentRoom.throwExit(where, theMonster);
             } else if (line.equals("exit")) {
                 System.out.println("Goodbye!!!");
                 return;
@@ -60,13 +67,6 @@ public class Player {
         }
     }
 
-    public Room getRoom() {
-        return this.currentRoom;
-    }
-
-    public void setRoom(Room r) {
-        this.currentRoom = r;
-    }
 
     public void lookAround() {
         this.currentRoom.display();
